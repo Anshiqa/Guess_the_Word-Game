@@ -77,7 +77,7 @@ def process_words(category):
     elif category == 'Cities':
         file_name = 'City_List.txt'
     elif category == 'DW Fun':
-        file_name = 'An_List_Avec_blanks'
+        file_name = 'DW_term_list.txt'
     full_word_list =[]
     word_list_blanks =[]
     f = open(str(file_name),"r")
@@ -193,7 +193,7 @@ Builder.load_string("""
                 
                 
             TextInput: 
-                text: ''
+                text: ""
                 id: nameInput
                 font_size: 18
             
@@ -276,6 +276,9 @@ Builder.load_string("""
             
             
 <GameScreen>:
+    on_pre_enter: root.change_gameHeader()
+    on_pre_enter: root.play_game()
+    
     BoxLayout:
         orientation: 'vertical'
         spacing: 5
@@ -416,10 +419,6 @@ class InstructScreen(Screen):
 #--------------------------------------------------------------------------------------------------------------------------
 #Game Screen
 class GameScreen(Screen):
-    def __init__(self, **kwargs):
-        super(GameScreen, self).__init__(**kwargs)
-        Clock.schedule_once(self.change_gameHeader,0.5)
-        Clock.schedule_once(self.play_game,0.5)
     #define widgets from screen as screen class properties
     question = ObjectProperty(None)
     answer = ObjectProperty(None)
@@ -427,30 +426,29 @@ class GameScreen(Screen):
     player_points =ObjectProperty(None)
     player_streak =ObjectProperty(None)
     indicate_Correct = ObjectProperty(None)
-    category = db.child("users").child("Player1").child("category_chosen").get().val()
     
-    def change_gameHeader(self,dt):
+    def change_gameHeader(self):
+        print (str(db.child("users").child("Player1").child("category_chosen").get().val()))
+
         if (db.child("users").child("Player1").child("category_chosen").get().val()) == 'Animals':
             self.ids.gameHeader.text = "Which Animal Is This?"
         elif (db.child("users").child("Player1").child("category_chosen").get().val()) == 'Cities':
             self.ids.gameHeader.text = "Which City Is This?"
-        elif (db.child("users").child("Player1").child("category_chosen").get().val()) == 'DW FUN':
-            self.ids.gameHeader.text = "Which DW term Is This?"       
-                
-                #also, assign StreakSm's output at this point to new variable, called 'addition'
-                
-                #update counter and points
+        else:
+            self.ids.gameHeader.text = "Which Digital World Term Is This?"       
             
-    def play_game(self,dt):        
-       #initialize empty varibale
+            
+    def play_game(self):        
+    #initialize empty varibale
         self.counter = 0
         self.points = 0
         self.used_num_list=[]
         self.addition = 0
         self.check = str(0)
-
+        self.category= db.child("users").child("Player1").child("category_chosen").get().val()
         #define what category in gamescreen class and process txt file
         self.category = str(self.category)
+        print (self.category)
         self.full_word_list, self.word_list_blanks = process_words(self.category)
         self.total_words = int(len(self.full_word_list))
         self.end_range = self.total_words - 1 
@@ -460,7 +458,7 @@ class GameScreen(Screen):
         self.go = StreakSm() 
         self.go.start()
     
-        #Igenerate first ran num and choose first question and answer
+        #generate first ran num and choose first question and answer
         self.ran_num = gen_ran_num(self.end_range,self.used_num_list)
         self.chosen_ques = str(self.word_list_blanks[self.ran_num])
         self.chosen_ans = str(self.full_word_list[self.ran_num])
