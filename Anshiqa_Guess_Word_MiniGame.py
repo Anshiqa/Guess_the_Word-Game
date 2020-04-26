@@ -399,17 +399,20 @@ class StartScreen(Screen):
     dW_Cat = ObjectProperty(None) 
     def enterAnimals(self):
         #make fn enter user name and catoegory in the firebase. 
-        self.name = str(self.ids.nameInput.text)
+        self.name = str(self.ids.nameInput.text.strip())
+        print (self.name+"stop")
         self.category = str(self.ids.animal_Cat.text)
         new_user(self.name, self.category)
     def enterCities(self):
         #make fn enter user name and catoegory in the firebase. 
-        self.name = str(self.ids.nameInput.text)
+        self.name = str(self.ids.nameInput.text.strip())
+        print (self.name+"stop")
         self.category = str(self.ids.cities_Cat.text)
         new_user(self.name, self.category)
     def enterDW(self):
         #make fn enter user name and catoegory in the firebase. 
-        self.name = str(self.ids.nameInput.text)
+        self.name = str(self.ids.nameInput.text.strip())
+        print (self.name+"stop")
         self.category = str(self.ids.dW_Cat.text)
         new_user(self.name, self.category)
     pass
@@ -477,10 +480,11 @@ class GameScreen(Screen):
     def now_check_player(self):
         #capitalise player's answer text
         self.ids.answer.text = str(self.ids.answer.text)
+        self.ids.answer.text = self.ids.answer.text.strip()
         self.ids.answer.text = self.ids.answer.text.upper()
         print ("self.ids.answer.text: "+ self.ids.answer.text)
         print ("self.chosen_ans: " + self.chosen_ans)
-        
+    
         # now_check_player's ans
         check = check_ans(self.ids.answer.text, self.chosen_ans)
         self.check = check

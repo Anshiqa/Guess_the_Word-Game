@@ -1,6 +1,5 @@
 algorithm
 comment
-debugging
 function
 Python
 float
@@ -19,7 +18,6 @@ Iteration
 Index
 Counter
 Accumulator 
-String
 Method
 Operator
 Slicing
